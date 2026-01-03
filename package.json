@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-firebasex",
   "version": "19.0.1",
-  "description": "Cordova plugin for Google Firebase",
+  "description": "Cordova plugin for Firebase Cloud Messaging (FCM) - messaging only",
   "types": "./types/index.d.ts",
   "author": {
     "name": "Dave Alden"
@@ -23,9 +23,10 @@
     "cordova-android",
     "cordova-ios",
     "firebase",
+    "fcm",
     "push",
     "notifications",
-    "phone auth"
+    "messaging"
   ],
   "scripts": {
     "version": "node ./bump-version.js && git add -A plugin.xml",
@@ -33,7 +34,7 @@
     "postinstall": "node ./scripts/post_install.js",
     "test": "npm run test:ios && npm run test:android",
     "test:ios": "bash ./test/test-default.sh 9.0.0 ios 5.0.1",
-    "test:android": "bash ./test/test-default.sh 9.0.0 android 8.1.0 && bash ./test/test-with-3-plugins.sh 9.0.0 android 8.1.0 cordova-plugin-request-location-accuracy cordova-android-play-services-gradle-release cordova-android-firebase-gradle-release"
+    "test:android": "bash ./test/test-default.sh 9.0.0 android 8.1.0"
   },
   "dependencies": {
     "plist": "^3.0.1",

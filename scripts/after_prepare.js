@@ -3,9 +3,8 @@
 'use strict';
 
 /**
- * This hook makes sure projects using [cordova-plugin-firebase](https://github.com/arnesson/cordova-plugin-firebase)
- * will build properly and have the required key files copied to the proper destinations when the app is build on Ionic Cloud using the package command.
- * Credits: https://github.com/arnesson.
+ * This hook makes sure projects using cordova-plugin-firebasex
+ * will build properly and have the required key files copied to the proper destinations when the app is built.
  */
 var fs = require('fs');
 var path = require("path");
@@ -51,10 +50,6 @@ var setupEnv = function(){
                 src: './plugins/' + utilities.getPluginId() + '/src/android/colors.xml',
                 target: ANDROID_DIR + '/app/src/main/res/values/colors.xml'
             },
-            performanceGradlePlugin: {
-                classDef: 'com.google.firebase:perf-plugin',
-                pluginDef: 'com.google.firebase.firebase-perf'
-            },
             manifestXml: ANDROID_DIR + '/app/src/main/AndroidManifest.xml',
         }
     };
@@ -77,8 +72,6 @@ module.exports = function(context){
     if(platforms.indexOf('android') !== -1 && utilities.directoryExists(ANDROID_DIR)){
         utilities.log('Preparing Firebase on Android');
         utilities.copyKey(PLATFORM.ANDROID);
-
-        var androidHelper = require("./lib/android");
 
         // Apply colours
         if(!fs.existsSync(path.resolve(PLATFORM.ANDROID.colorsXml.target))){
@@ -129,12 +122,6 @@ module.exports = function(context){
             utilities.log('Updated colors.xml with accent color');
         }
 
-        if(pluginVariables['ANDROID_FIREBASE_PERFORMANCE_MONITORING'] && pluginVariables['ANDROID_FIREBASE_PERFORMANCE_MONITORING'] === 'true'){
-            // Add Performance Monitoring gradle plugin for Android network traffic
-            androidHelper.addDependencyToRootGradle(PLATFORM.ANDROID.performanceGradlePlugin.classDef+":"+pluginVariables["ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION"]);
-            androidHelper.applyPluginToAppGradle(PLATFORM.ANDROID.performanceGradlePlugin.pluginDef);
-        }
-
         // Add tools namespace to manifest
         if(fs.existsSync(path.resolve(PLATFORM.ANDROID.manifestXml))){
             const manifestContents = fs.readFileSync(path.resolve(PLATFORM.ANDROID.manifestXml)).toString();
@@ -156,7 +143,6 @@ module.exports = function(context){
         helper.ensureRunpathSearchPath(context, xcodeProjectPath);
         podFileModified = helper.applyPodsPostInstall(pluginVariables, PLATFORM.IOS);
         helper.applyPluginVarsToPlists(pluginVariables, PLATFORM.IOS);
-        helper.ensureEncodedAppIdInUrlSchemes(PLATFORM.IOS)
         podFileModified = helper.applyPluginVarsToPodfile(pluginVariables, PLATFORM.IOS) || podFileModified;
 
         if(podFileModified){

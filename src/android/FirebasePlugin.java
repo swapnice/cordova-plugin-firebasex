@@ -861,9 +861,18 @@ public class FirebasePlugin extends CordovaPlugin {
         callbackContext.error(e.getMessage());
     }
 
-    private static void handleExceptionWithoutContext(Exception e) {
+    public static void handleExceptionWithoutContext(Exception e) {
         Log.e(TAG, e.getMessage());
         e.printStackTrace();
+    }
+
+    public static boolean channelExists(String channelId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
+            return channel != null;
+        }
+        return false;
     }
 
     private void executeGlobalJavascript(final String jsString) {
